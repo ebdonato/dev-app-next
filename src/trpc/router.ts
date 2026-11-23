@@ -1,8 +1,8 @@
-import { publicProcedure, router } from "./init";
+import { taskRouter } from "@/features/tasks/task.router";
+import { router } from "./init";
 
 export const appRouter = router({
-  // Temporary smoke endpoint until the task router is mounted (Step 5).
-  health: publicProcedure.query(() => ({ status: "ok" as const })),
+  task: taskRouter,
 });
 
 export type AppRouter = typeof appRouter;

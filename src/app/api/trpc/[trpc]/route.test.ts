@@ -1,14 +1,20 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+import { reset } from "@/features/tasks/task.repository";
 import { GET, POST } from "./route";
 
 const BASE = "http://localhost/api/trpc";
 
+beforeEach(() => {
+  reset();
+});
+
 describe("tRPC route handler", () => {
-  it("serves the health query over GET", async () => {
-    const res = await GET(new Request(`${BASE}/health`));
+  it("serves queries over GET", async () => {
+    const input = encodeURIComponent(JSON.stringify({}));
+    const res = await GET(new Request(`${BASE}/task.list?input=${input}`));
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ result: { data: { status: "ok" } } });
+    expect(await res.json()).toEqual({ result: { data: { items: [], nextCursor: null } } });
   });
 
   it("responds NOT_FOUND for an unknown procedure", async () => {
@@ -19,18 +25,17 @@ describe("tRPC route handler", () => {
     expect(body.error.data.code).toBe("NOT_FOUND");
   });
 
-  it("accepts POST requests (used by mutations)", async () => {
+  it("serves mutations over POST", async () => {
     const res = await POST(
-      new Request(`${BASE}/health`, {
+      new Request(`${BASE}/task.create`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: "{}",
+        body: JSON.stringify({ titulo: "Via HTTP" }),
       }),
     );
     const body = await res.json();
 
-    // `health` is a query, so the POST reaches tRPC and is rejected as a method
-    // mismatch rather than a 404/405 from the route handler itself.
-    expect(body.error.data.path).toBe("health");
+    expect(res.status).toBe(200);
+    expect(body.result.data.titulo).toBe("Via HTTP");
   });
 });
