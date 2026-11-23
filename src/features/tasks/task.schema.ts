@@ -26,7 +26,8 @@ const descricao = z
 
 const id = z.uuid("Invalid task id.");
 
-// UTC ISO 8601, as produced by Date.prototype.toISOString().
+// UTC ISO 8601 string (Date.prototype.toISOString()) rather than a Date: it is
+// JSON-safe from server to RSC to client hydration, so no transformer is needed.
 const dataCriacao = z.iso.datetime("Invalid creation date.");
 
 export const taskSchema = z.object({ id, titulo, descricao, dataCriacao });

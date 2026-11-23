@@ -2,6 +2,8 @@ import { TRPCClientError } from "@trpc/client";
 import type { AppRouter } from "@/trpc/router";
 
 export const GENERIC_ERROR_MESSAGE = "Something went wrong. Please try again.";
+export const NETWORK_ERROR_MESSAGE =
+  "Could not reach the server. Check your connection and try again.";
 
 /**
  * Turns any error into a sentence that is safe to show to users.
@@ -14,7 +16,12 @@ export const GENERIC_ERROR_MESSAGE = "Something went wrong. Please try again.";
 export function getErrorMessage(error: unknown): string {
   if (!(error instanceof TRPCClientError)) return GENERIC_ERROR_MESSAGE;
 
-  const zodError = (error as TRPCClientError<AppRouter>).data?.zodError;
+  const { data } = error as TRPCClientError<AppRouter>;
+  // No error payload means the server never answered (e.g. "Failed to fetch"):
+  // the raw message is a browser network error, not something for users.
+  if (!data) return NETWORK_ERROR_MESSAGE;
+
+  const zodError = data.zodError;
   if (zodError) {
     const fieldMessages: (string[] | undefined)[] = Object.values(zodError.fieldErrors);
     const firstFieldMessage = fieldMessages.flat().find(Boolean);

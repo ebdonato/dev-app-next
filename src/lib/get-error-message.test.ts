@@ -3,7 +3,11 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { GET, POST } from "@/app/api/trpc/[trpc]/route";
 import { reset } from "@/features/tasks/task.repository";
 import type { AppRouter } from "@/trpc/router";
-import { GENERIC_ERROR_MESSAGE, getErrorMessage } from "./get-error-message";
+import {
+  GENERIC_ERROR_MESSAGE,
+  getErrorMessage,
+  NETWORK_ERROR_MESSAGE,
+} from "./get-error-message";
 
 // A real tRPC client whose fetch is served in-process by the route handler,
 // so the errors below are exactly what the browser receives.
@@ -51,6 +55,20 @@ describe("getErrorMessage", () => {
     (error as Error).message = "";
 
     expect(getErrorMessage(error)).toBe(GENERIC_ERROR_MESSAGE);
+  });
+
+  it("returns the network message when the server can't be reached", async () => {
+    const offlineClient = createTRPCClient<AppRouter>({
+      links: [
+        httpLink({
+          url: "http://localhost/api/trpc",
+          fetch: () => Promise.reject(new TypeError("Failed to fetch")),
+        }),
+      ],
+    });
+    const error = await errorFrom(offlineClient.task.list.query({}));
+
+    expect(getErrorMessage(error)).toBe(NETWORK_ERROR_MESSAGE);
   });
 
   it.each([

@@ -136,7 +136,7 @@ Steps 2 and 4 can run in parallel, and so can 9 and 10–11.
 - Merge the Next.js `.gitignore` entries (`node_modules`, `.next`, `.env*`, …) into the existing `.gitignore` without losing the current entries.
 - Add Vitest to the library list in `AGENTS.md` (dev-only).
 
-**Deliverables:** `package.json`, `tsconfig.json` (`strict: true`), `next.config.ts`, `eslint` config, `vitest.config.ts`, an empty `src/app` shell.
+**Deliverables:** `package.json`, `tsconfig.json` (`strict: true`), `next.config.ts`, `eslint` config, `vitest.config.mts`, an empty `src/app` shell.
 
 **Acceptance criteria**
 - `npm run dev` serves a blank home page with no errors.
