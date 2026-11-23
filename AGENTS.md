@@ -18,7 +18,7 @@ Single-context: one `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/age
 
 This is a technical-challenge project: the implementation must be **as simple as possible** while staying clean and well designed. "Less is more."
 
-- **Scope**: build exactly what the case asks for. No speculative features, premature abstractions or libraries beyond what the stack needs (Next.js 15, tRPC, Zod, TanStack Query).
+- **Scope**: build exactly what the case asks for. No speculative features, premature abstractions or libraries beyond what the stack needs (Next.js 15, tRPC, Zod, TanStack Query; Vitest dev-only).
 - **Clean code**: small single-purpose modules and functions, intention-revealing names, no dead code. Comments explain *why*, not *what*.
 - **Separation of concerns**: keep the tRPC router thin; task logic and the in-memory store sit behind a small repository module, so storage could be swapped without touching the API or the UI.
 - **Single source of truth**: Zod schemas define the task shape and validation, shared by the backend and the form.
