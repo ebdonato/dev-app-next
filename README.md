@@ -4,6 +4,14 @@ A small task-management app built as a technical challenge with **Next.js 15 (Ap
 
 The goal was "less is more": a simple app that's still cleanly structured, validated and tested.
 
+## How this was built
+
+> **Built with AI, not by hand.** This code was produced through an agentic development workflow with [Claude Code](https://claude.com/claude-code), using [Matt Pocock's skills](https://github.com/mattpocock/skills) as the spec-driven development (SDD) framework.
+
+- **My role:** I set the guidelines (simplicity, clean code and design principles in [`AGENTS.md`](AGENTS.md)), and reviewed and approved the plan and the key decisions.
+- **Workflow:** the case → an [implementation plan](docs/implementation-plan.md) → one spec per step (`.scratch/NN-*/spec.md`) → step-by-step implementation by AI agents. Each step was verified (tests, lint, typecheck, build and browser checks) before its commit.
+- **Traceability:** every commit in the history is co-authored by Claude.
+
 ## Features
 
 - **CRUD:** create, list, edit and delete tasks (`id`, `titulo`, `descricao`, `dataCriacao`).
