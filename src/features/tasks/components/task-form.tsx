@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { z } from "zod";
 import { createTaskInput } from "../task.schema";
@@ -47,6 +47,21 @@ export function TaskForm({
   const tituloRef = useRef<HTMLInputElement>(null);
   const descricaoRef = useRef<HTMLTextAreaElement>(null);
   const id = useId();
+
+  // The form is server-rendered, so the user can type before React hydrates.
+  // Hydration keeps that text in the DOM but fires no onChange, so state would
+  // still hold the initial values and submit them. Adopt the DOM values once,
+  // right after hydration, so what is submitted is what the user sees.
+  useEffect(() => {
+    const titulo = tituloRef.current?.value;
+    const descricao = descricaoRef.current?.value;
+    if (titulo === undefined || descricao === undefined) return;
+    setValues((current) =>
+      current.titulo === titulo && current.descricao === descricao
+        ? current
+        : { titulo, descricao },
+    );
+  }, []);
 
   // Client errors win; a server error shows until the user edits the field.
   function errorFor(field: Field): string | undefined {
