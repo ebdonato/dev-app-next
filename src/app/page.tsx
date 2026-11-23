@@ -1,7 +1,3 @@
 export default function Home() {
-  return (
-    <main>
-      <h1>Task Manager</h1>
-    </main>
-  );
+  return <h1>Tasks</h1>;
 }
